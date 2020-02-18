@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
 <launch>
     <node pkg="data_matrix_detection" type="panorama-image.py" name="panorama_creation_node" output="screen"/>
-
 </launch>

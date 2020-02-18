@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 from __future__ import print_function
-
+import numpy as np
 import roslib
 #roslib.load_manifest('my_package')
 import sys
@@ -50,14 +50,13 @@ class image_converter:
         self.center_image = None
         self.right_image = None
 
-def panorama(imgs):
+def create_panorama(imgs):
     stitcher = cv2.createStitcher()
     ret, pano = stitcher.stitch(imgs)
     if ret == cv2.STITCHER_OK:
         return pano
     else:
         print("Error stitching")    
-
 
 def pub_panorama(panorama):
     panorama_pub = rospy.Publisher("panorama",Image,queue_size=1)
@@ -67,8 +66,6 @@ def pub_panorama(panorama):
     except CvBridgeError as e:
       print(e)
 
-   
-
 def main(args):
     ic = image_converter()
    
@@ -77,10 +74,12 @@ def main(args):
         try:
             # rospy.spin()
             if ic.left_image is not None and ic.center_image is not None and ic.right_image is not None:
-                pano_initial = panorama([ic.left_image,ic.center_image])
-                pano_final = panorama([pano_initial,ic.right_image])
-                ic.clean_images()
+                pano_initial = create_panorama([ic.left_image,ic.center_image])
+                pano_final = create_panorama([pano_initial,ic.right_image])
                 pub_panorama(pano_final)
+                ic.clean_images()
+            else:
+                continue
         except KeyboardInterrupt:
             print("Shutting down")
 

@@ -16,7 +16,6 @@ from cv_bridge import CvBridge, CvBridgeError
 
 
 def load_json_file():
-    # Load cameras transformation
     cameras_ids = ["left_camera", "reference_camera", "right_camera"]
     transformation_dict = {}
     print("\n Loading camera transformations file...\n")
@@ -27,7 +26,6 @@ def load_json_file():
     data = json.loads(data)
     for i in range(len(data)):
         transform = np.asarray(data[cameras_ids[i]])
-        #transform = transform.reshape((3,3)).astype(np.float32)
         transformation_dict[cameras_ids[i]]=transform
     print("\n Camera transformations loaded successfully!\n")
     return transformation_dict
@@ -49,7 +47,7 @@ class image_converter:
             self.center_image = cv_image
         except CvBridgeError as e:
             print(e)
-        return self
+       
     
     def callback_left_image(self,data):
         try:
@@ -57,7 +55,7 @@ class image_converter:
             self.left_image = cv_image
         except CvBridgeError as e:
             print(e)
-        return self
+       
     
     def callback_right_image(self,data):
         try:
@@ -65,7 +63,7 @@ class image_converter:
             self.right_image = cv_image
         except CvBridgeError as e:
             print(e)
-        return self
+       
     
     def clean_images(self):
         self.left_image = None
@@ -87,9 +85,7 @@ def pub_panorama(panorama):
 
 def main(args):
     cameras_ids = ["left_camera", "reference_camera", "right_camera"]
-    transform_dict = load_json_file()
-    print(transform_dict)
-    
+    transform_dict = load_json_file()    
     ic = image_converter()
     rospy.init_node('panorama_creation_node', anonymous=True)
 

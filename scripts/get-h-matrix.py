@@ -22,24 +22,14 @@ class get_matrix_h():
     
     def get_matrix(self):
         self.image_capture()
-
         ret1, corners1 = cv2.findChessboardCorners(self.frame1,  self.patternsize)
         ret2, corners2 = cv2.findChessboardCorners(self.frame2,  self.patternsize)
         H,_ = cv2.findHomography(corners1,corners2)
-
         H = np.float32(H)
-
-
-
         cv2.drawChessboardCorners(self.frame1, self.patternsize, corners1,ret1)
         cv2.drawChessboardCorners(self.frame2, self.patternsize, corners2,ret2)
         img_final = cv2.hconcat([self.frame1,self.frame2])
         cv2.imshow('Detections',img_final)
-        
-        
-        # print("\nTransformation camera to the reference (center):")
-        # print(H)
-        # print("\n")
 
         if cv2.waitKey(-1) & 0xFF == ord('q'):
             self.caps_release()    

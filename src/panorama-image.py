@@ -24,10 +24,11 @@ def load_json_file():
     filename = os.path.join(fileDir, '../catkin_ws/src/data_matrix_detection/cameras_params/transforms.json')
     with open(filename, 'r') as f:
         data = json.load(f)
+    data = json.loads(data)
     for i in range(len(data)):
         transform = np.asarray(data[cameras_ids[i]])
-        transform = transform.reshape((3,3)).astype(np.float32)
-        transformation_dict[cameras_ids[i]]=(transform)
+        #transform = transform.reshape((3,3)).astype(np.float32)
+        transformation_dict[cameras_ids[i]]=transform
     print("\n Camera transformations loaded successfully!\n")
     return transformation_dict
 
@@ -87,6 +88,7 @@ def pub_panorama(panorama):
 def main(args):
     cameras_ids = ["left_camera", "reference_camera", "right_camera"]
     transform_dict = load_json_file()
+    print(transform_dict)
     
     ic = image_converter()
     rospy.init_node('panorama_creation_node', anonymous=True)

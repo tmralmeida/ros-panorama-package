@@ -72,14 +72,6 @@ class image_converter:
         self.right_image = None
 
 
-#TODO: pass this function to the while main()
-def create_panorama(imgs, transform_dict):
-    stitcher = Stitcher(imgs,transform_dict)
-    result = stitcher.stitch()
-    if result is not None:
-        return result
-    else:
-        print("[ERROR]")
 
 def pub_panorama(panorama):
     panorama_pub = rospy.Publisher("panorama",Image,queue_size=1)
@@ -103,17 +95,18 @@ def main(args):
         try:
             # rospy.spin()
             if ic.left_image is not None and ic.center_image is not None and ic.right_image is not None:
-                # pano_initial = create_panorama([ic.left_image,ic.center_image])
-                # pano_final = create_panorama([pano_initial,ic.right_image])
-                # pub_panorama(pano_final)
                 imgs = {
                     'left_camera': ic.left_image,
                     'reference_camera': ic.center_image,
                     'right_camera': ic.right_image
                 }
-                pano_final = create_panorama(imgs,transform_dict)
-                pub_panorama(pano_final)
-                ic.clean_images()
+                stitcher = Stitcher(imgs, transform_dict)
+                result = stitcher.stitch()
+                if result is None:
+                    print("There was an error in the stitching procedure")
+                else:
+                    pub_panorama(result)
+                    ic.clean_images()
             else:
                 continue
         except KeyboardInterrupt:

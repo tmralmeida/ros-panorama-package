@@ -16,9 +16,12 @@ class Stitcher:
         
         reference_image = cv2.warpPerspective(self.reference_image, self.dict_transformations["reference_camera"], self.result_size)
 
+        result = np.zeros_like(reference_image)
+        result = cv2.addWeighted(reference_image, 1, result, 1, 0)
         for i in range(len(self.imgs_dummy)):
             result_warp = cv2.warpPerspective(self.imgs_dummy[i], self.dict_transformations[self.cameras_dummy[i]], self.result_size)
-            result = cv2.addWeighted(result_warp, 1, reference_image, 1, 0)
+            result = cv2.addWeighted(result_warp, 1, result, 1, 0)
+            
 
         final_result = self.process_image(result) 
         return final_result

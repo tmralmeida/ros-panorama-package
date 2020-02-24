@@ -8,6 +8,7 @@ RIGHT_CAMERA = 0
 CENTER_CAMERA = 2
 PANORAMA_WIDTH = 1920 
 SRC_IMAGES_WIDTH = 640
+I = 0
 
 
 class get_matrix_h():
@@ -48,9 +49,9 @@ class get_matrix_h():
 def write_json_file(h_lc,h_rc):
     transformations = {}
     center_init = PANORAMA_WIDTH/2 - (SRC_IMAGES_WIDTH/2)
-    h_lc[0,2] = center_init - np.abs(h_lc[0,2]) 
+    h_lc[0,2] = center_init - np.abs(h_lc[0,2]) + SRC_IMAGES_WIDTH/2
     h_rc[0,2] = center_init + h_rc[0,2]
-    print(center_init)
+
     #h_lc[0,2] = h_lc[0,2] 
     #h_rc[0,2] = h_rc[0,2]
     transforms_lst = [h_lc,np.array([[1,0,center_init],[0,1,0],[0,0,1]], dtype = np.float32), h_rc]
@@ -66,7 +67,7 @@ def write_json_file(h_lc,h_rc):
             return json.JSONEncoder.default(self, obj)
     
     json_dump = json.dumps(transformations, cls=NumpyEncoder)
-    with open('../cameras_transforms/transforms.json', 'w') as outfile:
+    with open('../cameras_transforms/transforms'+str(I)+'.json', 'w') as outfile:
         json.dump(json_dump, outfile)
  
 
@@ -78,7 +79,7 @@ def write_json_file(h_lc,h_rc):
     
     
 def main():
-    get_h = get_matrix_h(CENTER_CAMERA, LEFT_CAMERA, patternsize = (9,7))
+    get_h = get_matrix_h(LEFT_CAMERA, CENTER_CAMERA, patternsize = (9,7))
     h_lc = get_h.get_matrix()
     get_h2 = get_matrix_h(RIGHT_CAMERA,CENTER_CAMERA, patternsize = (9,7))
     h_rc = get_h2.get_matrix()

@@ -6,7 +6,7 @@ import json
 LEFT_CAMERA = 3
 RIGHT_CAMERA = 0
 CENTER_CAMERA = 2
-PANORAMA_WIDTH = 1800 
+PANORAMA_WIDTH = 1920 
 SRC_IMAGES_WIDTH = 640
 
 
@@ -50,6 +50,9 @@ def write_json_file(h_lc,h_rc):
     center_init = PANORAMA_WIDTH/2 - (SRC_IMAGES_WIDTH/2)
     h_lc[0,2] = center_init - np.abs(h_lc[0,2]) 
     h_rc[0,2] = center_init + h_rc[0,2]
+    print(center_init)
+    #h_lc[0,2] = h_lc[0,2] 
+    #h_rc[0,2] = h_rc[0,2]
     transforms_lst = [h_lc,np.array([[1,0,center_init],[0,1,0],[0,0,1]], dtype = np.float32), h_rc]
     cameras_ids = ["left_camera", "reference_camera", "right_camera"]
 
@@ -75,9 +78,9 @@ def write_json_file(h_lc,h_rc):
     
     
 def main():
-    get_h = get_matrix_h(LEFT_CAMERA,CENTER_CAMERA, patternsize = (8,6))
+    get_h = get_matrix_h(CENTER_CAMERA, LEFT_CAMERA, patternsize = (9,7))
     h_lc = get_h.get_matrix()
-    get_h2 = get_matrix_h(RIGHT_CAMERA,CENTER_CAMERA, patternsize = (8,6))
+    get_h2 = get_matrix_h(RIGHT_CAMERA,CENTER_CAMERA, patternsize = (9,7))
     h_rc = get_h2.get_matrix()
     write_json_file(h_lc,h_rc)
     

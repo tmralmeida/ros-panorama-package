@@ -2,4 +2,5 @@
 <launch>
     <include file="$(find data_matrix_detection)/launch/cameras.launch"/>
     <include file="$(find data_matrix_detection)/launch/panorama.launch"/>
+    <node pkg="rqt_gui" type="rqt_gui" name="rqt_gui"/>
 </launch>

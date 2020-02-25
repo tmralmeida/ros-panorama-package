@@ -34,9 +34,9 @@ def load_json_file():
 class image_converter:
     def __init__(self):
         self.bridge = CvBridge()
-        self.image_sub_center = rospy.Subscriber("/center_camera/image_raw",Image,self.callback_center_image)
-        self.image_sub_left = rospy.Subscriber("/left_camera/image_raw",Image,self.callback_left_image)
-        self.image_sub_right = rospy.Subscriber("/right_camera/image_raw",Image,self.callback_right_image)
+        self.image_sub_center = rospy.Subscriber("/center_camera/image_rect_color",Image,self.callback_center_image)
+        self.image_sub_left = rospy.Subscriber("/left_camera/image_rect_color",Image,self.callback_left_image)
+        self.image_sub_right = rospy.Subscriber("/right_camera/image_rect_color",Image,self.callback_right_image)
         self.left_image = None
         self.center_image = None
         self.right_image = None

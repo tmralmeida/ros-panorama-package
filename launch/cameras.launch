@@ -26,9 +26,4 @@
     <node name="image_proc" pkg="image_proc" type="image_proc" ns="center_camera"/>
     <node name="image_proc" pkg="image_proc" type="image_proc" ns="left_camera"/>
     <node name="image_proc" pkg="image_proc" type="image_proc" ns="right_camera"/>
-
-
-
-    <node pkg="rqt_gui" type="rqt_gui" name="rqt_gui"/>
-
 </launch>

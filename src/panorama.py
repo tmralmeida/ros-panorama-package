@@ -13,7 +13,7 @@ class Stitcher:
         self.tx = 600.0
 
     def stitch(self):
-        T = np.array([[1.0,0.0,600.0],[0.0,1.0,0.0],[0.0,0.0,1.0]])
+        T = np.array([[1.0,0.0,self.tx],[0.0,1.0,0.0],[0.0,0.0,1.0]])
         warped_left = cv2.warpPerspective(self.dict_imgs["left_camera"],np.dot(T,  self.dict_transformations["left_camera"]), self.result_size)
         warped_center = cv2.warpPerspective(self.dict_imgs["reference_camera"], T, self.result_size)
         warped_right = cv2.warpPerspective(self.dict_imgs["right_camera"], np.dot(T ,self.dict_transformations["right_camera"]), self.result_size)

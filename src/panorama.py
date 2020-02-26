@@ -10,30 +10,17 @@ class Stitcher:
         self.dict_transformations = transformations
         self.result_size = (1920, 480)
         self.imgs_dummy = []
+        self.tx = 600.0
 
     def stitch(self):
-        self.preprocess_dicts()
-        
-        reference_image = cv2.warpPerspective(self.reference_image, self.dict_transformations["reference_camera"], self.result_size)
-
-        result = np.zeros_like(reference_image)
-        result = cv2.addWeighted(reference_image, 1, result, 1, 0)
-        for i in range(len(self.imgs_dummy)):
-            result_warp = cv2.warpPerspective(self.imgs_dummy[i], self.dict_transformations[self.cameras_dummy[i]], self.result_size)
-            result = cv2.addWeighted(result_warp, 1, result, 1, 0)
-        final_result = self.process_image(result) 
+        T = np.array([[1.0,0.0,600.0],[0.0,1.0,0.0],[0.0,0.0,1.0]])
+        warped_left = cv2.warpPerspective(self.dict_imgs["left_camera"],np.dot(T,  self.dict_transformations["left_camera"]), self.result_size)
+        warped_center = cv2.warpPerspective(self.dict_imgs["reference_camera"], T, self.result_size)
+        warped_right = cv2.warpPerspective(self.dict_imgs["right_camera"], np.dot(T ,self.dict_transformations["right_camera"]), self.result_size)
+        final_result = np.zeros((self.result_size[1], self.result_size[0], 3), dtype=np.uint8)
+        for w in [warped_left, warped_center, warped_right]:
+            final_result[w != 0] = w[w != 0]
         return final_result
-
-
-    def preprocess_dicts(self):
-        self.cameras_dummy = []
-        for key,values in self.dict_imgs.items():
-            if key == 'reference_camera':
-                self.reference_image = values
-            else:
-                self.imgs_dummy.append(values)
-                self.cameras_dummy.append(key)
-        return self 
 
     def process_image(self, result):
         return result

@@ -72,10 +72,10 @@ class get_h_matrix():
         if ret1 == True and ret2 == True:
             H,_ = cv2.findHomography(corners1,corners2)
             H = np.float32(H)
-            if IMAGE == 'left':
-                H[0,2] = self.center_init - np.abs(H[0,2]) + SRC_IMAGES_WIDTH/2
-            else:
-                H[0,2] = self.center_init + H[0,2]
+            # if IMAGE == 'left':
+            #     H[0,2] = self.center_init - np.abs(H[0,2]) + SRC_IMAGES_WIDTH/2
+            # else:
+            #     H[0,2] = self.center_init + H[0,2]
             cv2.drawChessboardCorners(self.lateral_image, self.patternsize, corners1,ret1)
             cv2.drawChessboardCorners(self.center_image, self.patternsize, corners2,ret2)
             global NUM_SAMPLE
@@ -91,7 +91,6 @@ def write_json_file(transformation_vector):
     for i in range(NUM_SAMPLE):
         transformations["sample "+str(i)] = transformation_vector[i]
     
-    print(transformations)
     class NumpyEncoder(json.JSONEncoder):
         def default(self, obj):
             if isinstance(obj, np.ndarray):
@@ -108,7 +107,7 @@ def write_json_file(transformation_vector):
         
 def main(args):
     ic = image_converter()
-    h_tranformations = get_h_matrix(patternsize=(9,7))
+    h_tranformations = get_h_matrix(patternsize=(8,6))
     
     rospy.init_node('get_transforms_node', anonymous=True)
 

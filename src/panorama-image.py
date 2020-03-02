@@ -16,7 +16,7 @@ from cv_bridge import CvBridge, CvBridgeError
 
 
 def load_json_file():
-    cameras_ids = ["left_camera", "reference_camera", "right_camera"]
+    cameras_ids = ["left_camera", "right_camera"]
     transformation_dict = {}
     print("\n Loading camera transformations file...\n")
     fileDir = os.path.dirname(os.path.realpath('__file__'))
@@ -85,8 +85,10 @@ def pub_panorama(panorama):
 
 def main(args):
     cameras_ids = ["left_camera", "reference_camera", "right_camera"]
-    transform_dict = load_json_file()  
+    # transform_dict = load_json_file()  
     ic = image_converter()
+    stitcher = Stitcher()
+    stitcher2 = Stitcher()
     rospy.init_node('panorama_creation_node', anonymous=True)
 
     while True:
@@ -98,8 +100,11 @@ def main(args):
                     'reference_camera': ic.center_image,
                     'right_camera': ic.right_image
                 }
-                stitcher = Stitcher(imgs, transform_dict)
-                result = stitcher.stitch()
+                # stitcher = Stitcher(imgs, transform_dict)
+                # result = stitcher.stitch()
+           
+                # result = stitcher.stitch([ic.center_image, ic.right_image])
+                result = stitcher2.stitch([ic.left_image,ic.center_image])
                 if result is None:
                     print("There was an error in the stitching procedure")
                 else:

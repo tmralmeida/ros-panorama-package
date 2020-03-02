@@ -14,23 +14,6 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
-
-def load_json_file():
-    cameras_ids = ["left_camera", "right_camera"]
-    transformation_dict = {}
-    print("\n Loading camera transformations file...\n")
-    fileDir = os.path.dirname(os.path.realpath('__file__'))
-    filename = os.path.join(fileDir, '../catkin_ws/src/data_matrix_detection/cameras_transforms/transforms.json')
-    with open(filename, 'r') as f:
-        data = json.load(f)
-    data = json.loads(data)
-    for i in range(len(data)):
-        transform = np.asarray(data[cameras_ids[i]])
-        transformation_dict[cameras_ids[i]]=transform
-    print("\n Camera transformations loaded successfully!\n")
-    return transformation_dict
-
-
 class image_converter:
     def __init__(self):
         self.bridge = CvBridge()
@@ -84,27 +67,14 @@ def pub_panorama(panorama):
         
 
 def main(args):
-    cameras_ids = ["left_camera", "reference_camera", "right_camera"]
-    # transform_dict = load_json_file()  
     ic = image_converter()
     stitcher = Stitcher()
-    stitcher2 = Stitcher()
     rospy.init_node('panorama_creation_node', anonymous=True)
 
     while True:
         try:
-            # rospy.spin()
             if ic.left_image is not None and ic.center_image is not None and ic.right_image is not None:
-                imgs = {
-                    'left_camera': ic.left_image,
-                    'reference_camera': ic.center_image,
-                    'right_camera': ic.right_image
-                }
-                # stitcher = Stitcher(imgs, transform_dict)
-                # result = stitcher.stitch()
-           
-                # result = stitcher.stitch([ic.center_image, ic.right_image])
-                result = stitcher2.stitch([ic.left_image,ic.center_image])
+                result = stitcher.stitch([ic.center_image,ic.right_image])
                 if result is None:
                     print("There was an error in the stitching procedure")
                 else:

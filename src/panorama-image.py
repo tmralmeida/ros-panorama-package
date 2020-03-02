@@ -74,7 +74,7 @@ def main(args):
     while True:
         try:
             if ic.left_image is not None and ic.center_image is not None and ic.right_image is not None:
-                result = stitcher.stitch([ic.center_image,ic.right_image])
+                result = stitcher.stitch([ic.left_image,ic.center_image, ic.right_image])
                 if result is None:
                     print("There was an error in the stitching procedure")
                 else:

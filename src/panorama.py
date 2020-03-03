@@ -38,32 +38,21 @@ class Stitcher:
                       [0.0, 1.0, 0.0],
                       [0.0, 0.0, 1.0]])
 
-        warp_left = cv2.warpPerspective(image_left, np.dot(T,self.cachedHlc),(image_left.shape[1] * 3, image_left.shape[0]))
-        warp_center = cv2.warpPerspective(image_center, T,(image_center.shape[1] * 3, image_center.shape[0]))
-        warp_right = cv2.warpPerspective(image_right, np.dot(T,self.cachedHrc),(image_right.shape[1] * 3, image_right.shape[0]))
 
-
-        weights_left = cv2.warpPerspective(np.ones_like(image_left), np.dot(T,self.cachedHlc),(image_left.shape[1] * 3, image_left.shape[0]))
-        weights_center = cv2.warpPerspective(np.ones_like(image_center), T,(image_center.shape[1] * 3, image_center.shape[0]))
-        weights_right = cv2.warpPerspective(np.ones_like(image_right), np.dot(T,self.cachedHrc),(image_right.shape[1] * 3, image_right.shape[0]))
-
-
-
-        result = np.zeros_like(warp_right)
-        
-        for warp in [warp_left,warp_center,warp_right]:
-            result = cv2.addWeighted(result,1.0,warp,1.0,0.0)
-
+        transformations = [self.cachedHlc, np.identity(3, dtype=np.float32), self.cachedHrc]
+        result = np.zeros((images[0].shape[0],images[0].shape[1]*3,3)).astype(np.float32)
         weights = np.zeros_like(result)
-        for weight in [weights_left,weights_center,weights_right]:
+        for i in range(len(images)):
+            warp = cv2.warpPerspective(images[i], 
+                                       np.dot(T,transformations[i]), 
+                                       (images[i].shape[1]*3, images[i].shape[0])).astype(np.float32)
+            weight = cv2.warpPerspective(np.ones_like(images[i]), 
+                                       np.dot(T,transformations[i]), 
+                                       (images[i].shape[1]*3, images[i].shape[0])).astype(np.float32)
+            result =  cv2.addWeighted(result,1.0,warp,1.0,0.0)
             weights = cv2.addWeighted(weights,1.0,weight,1.0,0.0)
-
-        result = result/weights
             
-
-
-
-        return result
+        return np.uint8(result / weights)
     
     def detectAndDescribe(self, image):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

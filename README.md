@@ -1,5 +1,5 @@
-# data_matrix_detection
-This package is a set of ROS nodes that allow a real-time data matrix detection.
+# ros-panorama-package
+This package is a set of ROS nodes that allows the creation of a panorama image based on 3 cameras.
 
 ### Prerequisites
 

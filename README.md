@@ -16,14 +16,6 @@ Hardware:
 
 After all the prerequisites are installed, the first step is to calibrate the cameras in order to get the intrinsics parameters. This was based in this [Tutorial](http://wiki.ros.org/camera_calibration).
 
-To get the homogrophy matrix, which is used to compute the panorama image (in the /scripts directory) run:
-
-```
-python get-h-matrix.py
-```
-
-This will create a json file with the homogrophy matrices in the /camera_transforms directory.
-
 To launch the entire system run:
 
 ```

@@ -8,7 +8,7 @@ What things that are needed:
 * [ROS-melodic](http://wiki.ros.org/melodic/Installation/Ubuntu) - The ROS version used.
 
 Hardware:
-* [Jetson Agx Xavier](https://developer.nvidia.com/embedded/jetson-agx-xavier-developer-kit) - Board
+* [Jetson AGX Xavier](https://developer.nvidia.com/embedded/jetson-agx-xavier-developer-kit) - Board
 * [e-CAM130_CUXVR - Multiple Camera Board for NVIDIA® Jetson AGX Xavier™](https://www.e-consystems.com/nvidia-cameras/jetson-agx-xavier-cameras/four-synchronized-4k-cameras.asp) - Cameras board
 
 
